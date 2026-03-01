@@ -60,7 +60,7 @@ const permissionTargets: Array<{
   {
     id: 'home-folder',
     title: 'Home Folder (File Search)',
-    description: 'Required to index files in Documents, Desktop, Downloads, and Pictures.',
+    description: 'Required to index files in Documents, Desktop, and Downloads.',
     url: 'x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders',
     icon: FolderOpen,
     iconTone: 'text-blue-100',
@@ -163,6 +163,7 @@ const OnboardingExtension: React.FC<OnboardingExtensionProps> = ({
   const introVideoRef = useRef<HTMLVideoElement | null>(null);
   const openedPermissionsRef = useRef<Record<string, boolean>>({});
   const requestedPermissionsRef = useRef<Record<string, boolean>>({});
+  const finalStepHotkeyBaselineRef = useRef(0);
 
   useEffect(() => {
     openedPermissionsRef.current = openedPermissions;
@@ -346,10 +347,15 @@ const OnboardingExtension: React.FC<OnboardingExtensionProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!onboardingHotkeyPresses) return;
     if (step !== STEPS.length - 1) return;
+    if (onboardingHotkeyPresses <= finalStepHotkeyBaselineRef.current) return;
     onComplete();
   }, [onboardingHotkeyPresses, step, onComplete]);
+
+  useEffect(() => {
+    if (step !== STEPS.length - 1) return;
+    finalStepHotkeyBaselineRef.current = onboardingHotkeyPresses;
+  }, [onboardingHotkeyPresses, step]);
 
   // Clear any lingering text selection when the user navigates between steps.
   // Without this, text selected on the Read Mode step (step 5) stays highlighted

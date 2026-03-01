@@ -2512,7 +2512,7 @@ async function probeHomeFolderAccess(): Promise<HomeFolderAccessProbeResult> {
 
   const homeDir = app.getPath('home');
   const targets = [homeDir];
-  for (const name of ['Desktop', 'Documents', 'Downloads', 'Pictures']) {
+  for (const name of ['Desktop', 'Documents', 'Downloads']) {
     const targetPath = path.join(homeDir, name);
     if (fs.existsSync(targetPath)) {
       targets.push(targetPath);
